@@ -3,17 +3,47 @@ const express = require('express');
 const app = express();
 const routes = require('./routes/routes')
 
+
+// const router = express.Router();
+
+// router.use((req,res,next)=>{
+//     console.log("here");
+// })
+
+// app.use(router);
+
 // mount routes
 app.use('/api/v1', routes);
 
 // 404 page not found
-app.use((req, res) => {
-    res.status(404).json({
-        msg: "page not found",
-        result: null,
-        status: false
-    })
+app.use((req, res, next) => {
+    // res.status(404).json({
+    //     msg: "page not found",
+    //     result: null,
+    //     status: false
+    // })
+
+    next({
+        status: 404,
+        msg: "not found"
+    });
+    // next middleware error handling
 });
+
+
+// error handling middlware
+app.use((error, req, res, next) => {
+    let stausCode = error.status || 500;
+    let msg = error.msg || error;
+    res.status(stausCode).json({
+        msg: msg,
+        result: null,
+        status: false,
+    })
+
+
+
+})
 
 app.listen(3005, 'localhost', (err) => {
     if (err) {
