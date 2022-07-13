@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
-
-router.route = ('/')
+// CRUD ==> title,status, image,link
+router.route('/')
     .get((req, res, next) => {
         console.log(req.dir);
         res.json({
@@ -14,7 +14,7 @@ router.route = ('/')
     .post((req, res, next) => {
     })
 
-router.route = ('/:id')
+router.route('/:id')
     .get((req, res, next) => { })
     .post((req, res, next) => { })
     .put((req, res, next) => { })

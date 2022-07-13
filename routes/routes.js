@@ -6,9 +6,14 @@ const bannerRoutes = require('./banner.routes');
 const categoryRoutes = require('./category.routes');
 const orderRoutes = require('./order.routes');
 const productsRoutes = require('./products.routes')
+const authRoutes = require('./auth.routes');
+
 
 
 // base url: http://localhost:3005/api/vi
+app.use(authRoutes);
+
+
 app.use('/user', ((req, res, next) => {
     req.dir = '/public/uploads/users'
     // compelte cycle
@@ -43,6 +48,7 @@ app.use('/products', ((req, res, next) => {
     req.dir = '/public/uploads/products'
     next();
 }), productsRoutes);
+
 
 
 module.exports = app; 

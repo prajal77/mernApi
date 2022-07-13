@@ -3,14 +3,8 @@ const express = require('express');
 const app = express();
 const routes = require('./routes/routes')
 
-
-// const router = express.Router();
-
-// router.use((req,res,next)=>{
-//     console.log("here");
-// })
-
-// app.use(router);
+app.use(express.json()); //applicaiton/json
+app.use(express.urlencoded({ extended: false }));
 
 // mount routes
 app.use('/api/v1', routes);
@@ -30,7 +24,6 @@ app.use((req, res, next) => {
     // next middleware error handling
 });
 
-
 // error handling middlware
 app.use((error, req, res, next) => {
     let stausCode = error.status || 500;
@@ -40,9 +33,6 @@ app.use((error, req, res, next) => {
         result: null,
         status: false,
     })
-
-
-
 })
 
 app.listen(3005, 'localhost', (err) => {

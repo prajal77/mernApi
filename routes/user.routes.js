@@ -22,7 +22,7 @@ const isAdmin = (res, req, next) => {
 
 router.route('/')
     .get(loginCheck, isAdmin, userCtrl.userList)
-    .post(userCtrl.registerUser);
+// .post(userCtrl.registerUser);
 // user/3
 // router.route('/:id')
 //     .get(getDetail)
