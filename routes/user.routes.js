@@ -1,41 +1,31 @@
 const express = require("express");
 // const app = express();
 const router = express.Router();
+const loginCheck = require('../app/middleware/auth.middleware');
+const UserController = require('../app/controllers/user.controller');
 
-const loginCheck = (req, res, next) => {
-    // login Check
-    next();
-};
+const userCtrl = new UserController();
+
+// const loginCheck = (req, res, next) => {
+//     // login Check
+//     next();
+// };
 
 const isAdmin = (res, req, next) => {
     // role checked
     next();
 };
-const userList = (res, req, next) => {
-    // finally list user
-    res.json();
-}
 // user 
-router.get('/', loginCheck, isAdmin, userList
-);
-
-router.post('/', (req, res, next) => {
-    //user register
-    // form data receive
-    // validate
-    // db validate
-    // query
-    // response
-
-    next({
-        status: 400,
-        msg: {
-            email: "Invalid Email"
-        }
-
-    })
-});
+// router.get('/', loginCheck, isAdmin, userList
+// );
 
 
-
+router.route('/')
+    .get(loginCheck, isAdmin, userCtrl.userList)
+    .post(userCtrl.registerUser);
+// user/3
+// router.route('/:id')
+//     .get(getDetail)
+//     .post(updateUser)
+//     .delete(userDelete)
 module.exports = router;
