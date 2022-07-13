@@ -6,6 +6,7 @@ class AuthController {
     }
     login = (req, res, next) => {
         let data = req.body;
+        console.log(req.file);
         let validationMsg = this.authSvc.loginValidate(data);
         if (validationMsg) {
             next({
@@ -33,6 +34,12 @@ class AuthController {
     register = (req, res, next) => {
         try {
             let data = req.body;
+            if (req.file) {
+                data.image = req.file.filename;
+            }
+            // console.log(req.file);//single file
+            // console.log(req.files);//multiple file
+
             this.authSvc.registerValidate(data);
             //   db operation
             res.json({
@@ -48,8 +55,6 @@ class AuthController {
                 msg: error
 
             })
-
-
         }
 
     }

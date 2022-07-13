@@ -5,6 +5,7 @@ const routes = require('./routes/routes')
 
 app.use(express.json()); //applicaiton/json
 app.use(express.urlencoded({ extended: false }));
+// multipart/form-data
 
 // mount routes
 app.use('/api/v1', routes);
