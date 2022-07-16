@@ -41,6 +41,10 @@ class AuthController {
             // console.log(req.files);//multiple file
 
             this.authSvc.registerValidate(data);
+            // email.send
+            req.myEvent.emit('send-register-email', data)
+
+
             //   db operation
             res.json({
                 result: data,

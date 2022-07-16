@@ -1,3 +1,5 @@
+const uploader = require('../app/middleware/uploader.middleware');
+
 const router = require('express').Router();
 
 // /brand => get => list all brands
@@ -17,8 +19,16 @@ router.route('/')
 
     })
     .post((req, res, next) => {
-
-    })
+        req.dir = "public/uploads/brand"
+        next();
+    }, uploader.single('image'),
+        (req, res, next) => {
+            res.json({
+                result: req.body,
+                status: true,
+                msg: "Success"
+            })
+        })
 
 router.route('/:id')
     .get((req, res, next) => {
