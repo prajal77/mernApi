@@ -1,5 +1,6 @@
+const { response } = require('../../routes/routes');
 const AuthService = require('../services/auth.services');
-
+const db = require('../services/mongodb.service');
 class AuthController {
     constructor() {
         this.authSvc = new AuthService;
@@ -34,6 +35,7 @@ class AuthController {
     register = (req, res, next) => {
         try {
             let data = req.body;
+            console.log(data);
             if (req.file) {
                 data.image = req.file.filename;
             }
@@ -42,16 +44,27 @@ class AuthController {
 
             this.authSvc.registerValidate(data);
             // email.send
-            req.myEvent.emit('send-register-email', data)
 
+            //db operation
+            db()
+                .then((setDb) => {
+                    return setDb.collection('users').insertOne(data)
+                })
+                .then((response) => {
+                    req.myEvent.emit('send-register-email', data)
 
-            //   db operation
-            res.json({
-                result: data,
-                status: true,
-                msg: "Success"
-            })
-
+                    res.json({
+                        result: data,
+                        stats: true,
+                        msg: "Success"
+                    })
+                })
+                .catch((err) => {
+                    next({
+                        status: 500,
+                        msg: err
+                    })
+                })
         }
         catch (error) {
             next({
