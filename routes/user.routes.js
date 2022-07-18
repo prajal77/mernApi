@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const loginCheck = require('../app/middleware/auth.middleware');
 const UserController = require('../app/controllers/user.controller');
+const uploader = require('../app/middleware/uploader.middleware')
 
 const userCtrl = new UserController();
 
@@ -24,8 +25,9 @@ router.route('/')
     .get(loginCheck, isAdmin, userCtrl.userList)
 // .post(userCtrl.registerUser);
 // user/3
-// router.route('/:id')
-//     .get(getDetail)
-//     .post(updateUser)
-//     .delete(userDelete)
+router.route('/:id')
+    //     .get(getDetail)
+    .put(loginCheck, isAdmin,
+        uploader.single('image'), userCtrl.updateUser)
+    .delete(loginCheck, isAdmin, userCtrl.userDelete)
 module.exports = router;

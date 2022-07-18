@@ -1,41 +1,57 @@
-const { response } = require('../../routes/routes');
 const AuthService = require('../services/auth.services');
 const db = require('../services/mongodb.service');
 class AuthController {
     constructor() {
         this.authSvc = new AuthService;
     }
-    login = (req, res, next) => {
-        let data = req.body;
-        console.log(req.file);
-        let validationMsg = this.authSvc.loginValidate(data);
-        if (validationMsg) {
-            next({
-                status: 422,
-                msg: validationMsg
-            })
-            // req.email => null ..400 bad request
-            // req.username =>'' 422 ..unprocessable entity
-            // res.status(422).json({
-            //     msg: "Credentials are required",
-            //     result: null,
-            //     status : false
-            //     // msg: {
-            //     //     email: "Email is required",
-            //     //     password: "password is required"
+    login = async (req, res, next) => {
+        try {
+            let data = req.body;
+            let validationMsg = this.authSvc.loginValidate(data);
+            if (validationMsg) {
+                next({
+                    status: 422,
+                    msg: validationMsg
+                })
 
-            //     // }
-            // })
-        } else {
-            res.json({
-                result: data
+            } else {
+                let seldb = await db();
+                if (seldb) {
+                    let user = await seldb.collection('users').findOne({
+                        email: data.email,
+                        password: data.password
+                    });
+                    if (user) {
+                        res.json({
+                            result: user,
+                            msg: "User logged in successsfully",
+                            status: true
+                        })
+
+                    } else {
+                        next({
+                            status: 400,
+                            msg: "Credential does not match"
+                        })
+                    }
+
+                } else {
+                    throw "Error connecting db";
+                }
+            }
+        }
+        catch (err) {
+            next({
+                status: 500,
+                msg: err
             })
         }
+
     }
     register = (req, res, next) => {
         try {
             let data = req.body;
-            console.log(data);
+            // console.log(data);
             if (req.file) {
                 data.image = req.file.filename;
             }
@@ -50,7 +66,7 @@ class AuthController {
                 .then((setDb) => {
                     return setDb.collection('users').insertOne(data)
                 })
-                .then((response) => {
+                .then((respons) => {
                     req.myEvent.emit('send-register-email', data)
 
                     res.json({
@@ -75,6 +91,7 @@ class AuthController {
         }
 
     }
+
 
 }
 

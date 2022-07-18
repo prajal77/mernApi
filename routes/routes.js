@@ -8,14 +8,13 @@ const orderRoutes = require('./order.routes');
 const productsRoutes = require('./products.routes')
 const authRoutes = require('./auth.routes');
 
-
-
 // base url: http://localhost:3005/api/vi
 app.use(authRoutes);
 
 
 app.use('/user', ((req, res, next) => {
-    req.dir = '/public/uploads/users'
+    // console.log('here');
+    req.dir = 'public/uploads/user'
     // compelte cycle
     next();
 }), userRoutes);

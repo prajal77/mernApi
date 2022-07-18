@@ -8,7 +8,7 @@ class AuthService {
         }
         return msg;
     }
-    registerValidate = (data) => {
+    registerValidate = (data, isUpdate = false) => {
         let msg = null;
         if (!data.name) {
             msg['name'] = "Name is required"
@@ -16,8 +16,10 @@ class AuthService {
         if (!data.email) {
             msg['email'] = "Email is required"
         }
-        if (!data.password) {
-            msg['password'] = "password is required"
+        if (!isUpdate) {
+            if (!data.password) {
+                msg['password'] = "password is required"
+            }
         }
         if (!data.role) {
             msg['role'] = "Role is required"
