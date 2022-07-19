@@ -16,7 +16,7 @@ class UserController {
                     msg: "Fetched"
                 })
             } else {
-                throw "Erroe while db connection"
+                throw "Error while db connection"
             }
 
         } catch (err) {
@@ -45,7 +45,7 @@ class UserController {
                 let selDb = await db();
                 // console.log(selDb);
                 if (selDb) {
-                    selDb.collection("users").updataOne({
+                    selDb.collection("users").updateOne({
                         _id: new mongodb.ObjectId(req.params.id)
                     }, {
                         $set: data
@@ -79,11 +79,11 @@ class UserController {
         try {
             let selDb = await db();
             if (selDb) {
-                let det = await selDb.collection('users'.deleteOne({
+                let det = await selDb.collection('users').deleteOne({
                     _id: new mongodb.ObjectId(req.params.id)
-                }))
+                })
                 res.json({
-                    result: update,
+                    result: det,
                     status: true,
                     msg: 'user deleted!'
                 })

@@ -52,6 +52,7 @@ app.use((req, res, next) => {
 
 // error handling middlware
 app.use((error, req, res, next) => {
+    console.log("error", error);
     let stausCode = error.status || 500;
     let msg = error.msg || error;
     res.status(stausCode).json({
