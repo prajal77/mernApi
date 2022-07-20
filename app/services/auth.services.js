@@ -1,3 +1,5 @@
+const db = require("./mongodb.service");
+
 class AuthService {
     loginValidate = (data) => {
         let msg = null;
@@ -31,5 +33,42 @@ class AuthService {
         }
         // return msg;
     }
+
+    login = async (data) => {
+        try {
+            let dbSel = await db();
+            let user = await dbSel.collection('users').findOne({
+                email: data.email,
+                password: data.password
+            });
+            if (user) {
+                return user;
+            } else {
+                throw { status: 400, msg: "User doesn't exist" }
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+
+
+    registerUser = (data) => {
+        return new Promise((res, rej) => {
+            db()
+                .then((sel) => {
+                    return sel.collection('users').insertOne(data)
+                })
+                .then((ak) => {
+                    res(ak);
+                })
+                .catch((err) => {
+                    rej(err);
+                })
+        })
+    }
+
+
+
 }
 module.exports = AuthService;

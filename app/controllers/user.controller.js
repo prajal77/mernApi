@@ -33,9 +33,9 @@ class UserController {
             if (req.file) {
                 data.image = req.file.filename;
             }
-            console.log(data);
+            // console.log(data);
             let validate = this.authSvc.registerValidate(data, true);
-            console.log(validate);
+            // console.log(validate);
             if (validate) {
                 next({
                     status: 400,

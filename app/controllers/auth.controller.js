@@ -1,5 +1,5 @@
 const AuthService = require('../services/auth.services');
-const db = require('../services/mongodb.service');
+// const db = require('../services/mongodb.service');
 class AuthController {
     constructor() {
         this.authSvc = new AuthService;
@@ -10,45 +10,25 @@ class AuthController {
             let validationMsg = this.authSvc.loginValidate(data);
             if (validationMsg) {
                 next({
-                    status: 422,
+                    status: 400,
                     msg: validationMsg
                 })
-
             } else {
-                let seldb = await db();
-                if (seldb) {
-                    let user = await seldb.collection('users').findOne({
-                        email: data.email,
-                        password: data.password
-                    });
-                    if (user) {
-                        res.json({
-                            result: user,
-                            msg: "User logged in successsfully",
-                            status: true
-                        })
-
-                    } else {
-                        next({
-                            status: 400,
-                            msg: "Credential does not match"
-                        })
-                    }
-
-                } else {
-                    throw "Error connecting db";
-                }
+                let user = await this.authSvc.login(data);
+                console.log(data);
+                res.json({
+                    result: user,
+                    status: true,
+                    msg: "User logged in success"
+                })
             }
         }
         catch (err) {
-            next({
-                status: 500,
-                msg: err
-            })
+            next(err)
         }
 
     }
-    register = (req, res, next) => {
+    register = async (req, res, next) => {
         try {
             let data = req.body;
             // console.log(data);
@@ -60,24 +40,18 @@ class AuthController {
 
             this.authSvc.registerValidate(data);
             // email.send
-
             //db operation
-            db()
-                .then((setDb) => {
-                    return setDb.collection('users').insertOne(data)
-                })
-                .then((respons) => {
-                    req.myEvent.emit('send-register-email', data)
-
+            this.authSvc.registerUser(data)
+                .then((succ) => {
                     res.json({
-                        result: data,
-                        stats: true,
-                        msg: "Success"
+                        status: true,
+                        msg: 'user registered',
+                        result: data
                     })
                 })
                 .catch((err) => {
                     next({
-                        status: 500,
+                        status: 400,
                         msg: err
                     })
                 })
@@ -86,13 +60,9 @@ class AuthController {
             next({
                 status: 422,
                 msg: error
-
             })
         }
-
     }
-
-
 }
 
 module.exports = AuthController;
