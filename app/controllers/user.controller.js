@@ -18,7 +18,6 @@ class UserController {
             } else {
                 throw "Error while db connection"
             }
-
         } catch (err) {
             next({
                 status: 500,

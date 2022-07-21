@@ -10,7 +10,7 @@ const uploader = require('../app/middleware/uploader.middleware');
 // /brand/:id => delete => Delete a brand
 
 router.route('/')
-    // .get(brandCtrl.getBrand)
+    .get(brandCtrl.getAllBrand)
     .post((req, res, next) => {
         req.dir = "public/uploads/brand"
         next();

@@ -1,4 +1,5 @@
 const BrandServices = require('../services/brand.services');
+const db = require('../services/mongodb.service');
 
 
 class BrandController {
@@ -27,6 +28,20 @@ class BrandController {
             next(error)
         }
     }
+    getAllBrand = async (req, res, next) => {
+        try {
+            let allBrand = await this.brandSvc.getAllBrands();
+            res.json({
+                result: allBrand,
+                status: true,
+                msg: "All Brand feteched successfully"
+            })
+        } catch (error) {
+            next(error);
+        }
+
+    }
+
 }
 
 module.exports = BrandController;

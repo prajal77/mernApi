@@ -29,6 +29,17 @@ class BrandServices {
             throw err;
         }
     }
+
+    getAllBrands = async () => {
+        let selDb = await db();
+
+        return selDb.collection('brands').find().toArray();
+
+    }
+
+
+
+
 }
 
 module.exports = BrandServices;
