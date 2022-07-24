@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const http = require('http')
 const socketServer = http.createServer(app)
+require('./app/services/mongooes.services')
+
 const routes = require('./routes/routes')
 const { Server } = require('socket.io');
 const io = new Server(socketServer);
